@@ -66,25 +66,24 @@ if (!['mustard','cream','meadow','darkwoods'].includes(TWEAKS.palette)) TWEAKS.p
     background: radial-gradient(ellipse at center, transparent 30%, rgba(58,40,24,0.85) 95%);
     mix-blend-mode: multiply;
   }
-  .fx-chromatic { position: fixed; inset: 0; z-index: 8002; pointer-events: none; opacity: 0;
-    backdrop-filter: hue-rotate(15deg) saturate(1.4);
-  }
-  .fx-layer { position: fixed; inset: 0; z-index: 7999; pointer-events: none; overflow: hidden; }
-  .fx-layer svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+  .fx-chromatic { display: none; }
+  .fx-layer { position: fixed; inset: 0; z-index: 7999; pointer-events: none; overflow: hidden; contain: strict; }
+  .fx-layer svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; will-change: opacity; }
   .fx-layer svg path {
-    fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3;
-    filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px #f0d84a) drop-shadow(0 0 20px #9ccf70) drop-shadow(0 0 35px #f0d84a);
+    fill: none; stroke-linecap: round; stroke-linejoin: round;
   }
-  .fx-layer svg path.glow { stroke-width: 18; opacity: 0.45; filter: blur(6px); }
-  .fx-layer svg path.mid { stroke-width: 6; stroke: #fffce0; filter: drop-shadow(0 0 6px #f0d84a) drop-shadow(0 0 16px #9ccf70); }
-  .fx-layer svg path.core { stroke-width: 2; stroke: #fff; }
+  .fx-layer svg path.glow { stroke-width: 14; opacity: 0.5; stroke: #f0d84a; filter: blur(4px); }
+  .fx-layer svg path.mid  { stroke-width: 5;  stroke: #fffce0; }
+  .fx-layer svg path.core { stroke-width: 1.5; stroke: #ffffff; }
 
   .spark { position: absolute; width: 6px; height: 6px; border-radius: 50%;
-    pointer-events: none;
-    box-shadow: 0 0 10px #f0d84a, 0 0 20px #9ccf70;
+    pointer-events: none; will-change: transform, opacity;
+    box-shadow: 0 0 8px #f0d84a;
+    transform: translate(-50%, -50%);
   }
-  .shock-ring { position: absolute; border-radius: 50%; border: 3px solid rgba(240,216,74,0.8);
-    pointer-events: none; box-shadow: 0 0 20px #f0d84a, inset 0 0 20px #9ccf70; }
+  .shock-ring { position: absolute; border-radius: 50%; border: 3px solid rgba(240,216,74,0.9);
+    pointer-events: none; will-change: transform, opacity;
+    width: 20px; height: 20px; transform: translate(-50%, -50%) scale(1); }
 
   /* ========== PAGE SNAP ========== */
   section.page {
@@ -229,15 +228,21 @@ if (!['mustard','cream','meadow','darkwoods'].includes(TWEAKS.palette)) TWEAKS.p
   .cta .zap-hint { margin-top: 20px; font-family: 'JetBrains Mono'; font-size: 11px; color: rgba(255,255,255,.4); letter-spacing: 0.2em; position: relative; z-index: 2; }
 
   /* ========== UI BUTTONS ========== */
-  .zap-btn { position: fixed; left: 20px; bottom: 20px; z-index: 400;
-    background: var(--accent); color: var(--ink); border: 2px solid var(--ink);
-    border-radius: 99px; padding: 10px 18px; font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 500;
-    cursor: pointer; letter-spacing: 0.15em; display: flex; align-items: center; gap: 8px;
+  .skill-dock { position: fixed; left: 20px; bottom: 20px; z-index: 400; display: flex; gap: 10px; }
+  .skill-btn { background: var(--accent); color: var(--ink); border: 2px solid var(--ink);
+    border-radius: 14px; padding: 10px 14px; font-family: 'JetBrains Mono'; font-size: 10px; font-weight: 600;
+    cursor: pointer; letter-spacing: 0.12em; display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 90px;
     box-shadow: 0 8px 24px -8px rgba(var(--glow), 0.8);
-    transition: transform .15s; animation: btnpulse 2s ease-in-out infinite;
+    transition: transform .15s;
   }
+  .skill-btn .key { font-size: 14px; font-weight: 800; letter-spacing: 0; font-family: 'Bricolage Grotesque'; padding: 2px 8px; border: 1.5px solid var(--ink); border-radius: 6px; background: rgba(255,255,255,0.5); line-height: 1; }
+  .skill-btn .lbl { font-size: 9px; }
+  .skill-btn:hover { transform: translateY(-2px) scale(1.04); }
+  .skill-btn.ult { background: linear-gradient(135deg, #f0d84a 0%, #fff 40%, #9ccf70 100%); animation: ultpulse 1.6s ease-in-out infinite; }
+  .skill-btn.ult .key { background: var(--ink); color: var(--accent); border-color: var(--accent); }
+  @keyframes ultpulse { 50% { box-shadow: 0 8px 30px -4px rgba(240,216,74,1), 0 0 0 12px rgba(156,207,112,0); } }
+  .skill-btn.zap { animation: btnpulse 2.2s ease-in-out infinite; }
   @keyframes btnpulse { 50% { box-shadow: 0 8px 24px -8px rgba(var(--glow), 1), 0 0 0 10px rgba(var(--glow), 0); } }
-  .zap-btn:hover { transform: translateY(-2px) scale(1.05); }
 
   .tweaks { position: fixed; right: 20px; bottom: 20px; z-index: 500; width: 280px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; font-size: 13px; box-shadow: 0 20px 50px -20px rgba(0,0,0,0.25); display: none; color: var(--ink); }
   .tweaks.open { display: block; }
@@ -327,7 +332,7 @@ if (!['mustard','cream','meadow','darkwoods'].includes(TWEAKS.palette)) TWEAKS.p
     <div class="huge e d1">Cùng <em>chạy</em><br/>với <em class="green">Wanpachi</em>.</div>
     <div class="sub e d2">Trang hồ sơ fan-made dành cho Wanpachi / Yamper — Pokémon Cún Con đáng yêu nhất của vùng Galar.</div>
     <button class="btn e d3" onclick="goTo(1,false)">↓ BẮT ĐẦU KHÁM PHÁ</button>
-    <div class="zap-hint e d4">NHẤN <b style="color:var(--accent)">Z</b> HOẶC <b style="color:var(--accent)">SPACE</b> ĐỂ GIẬT ĐIỆN</div>
+    <div class="zap-hint e d4">NHẤN <b style="color:var(--accent)">R</b> ULTIMATE · <b style="color:var(--accent)">Q</b> ZAP</div>
   </div>
 </section>
 
@@ -468,13 +473,16 @@ if (!['mustard','cream','meadow','darkwoods'].includes(TWEAKS.palette)) TWEAKS.p
     <div class="huge e d1">Cùng <em>chạy</em><br/>với <em class="green">Wanpachi</em>.</div>
     <div class="sub e d2">Cảm ơn đã xem đến đây — hy vọng bạn cũng yêu chú cún điện này như mình.</div>
     <button class="btn e d3" onclick="goTo(0,false)">↑ QUAY LẠI ĐẦU</button>
-    <div class="zap-hint e d4">NHẤN <b style="color:var(--accent)">Z</b> HOẶC <b style="color:var(--accent)">SPACE</b> ĐỂ GIẬT ĐIỆN</div>
+    <div class="zap-hint e d4">NHẤN <b style="color:var(--accent)">R</b> ULTIMATE · <b style="color:var(--accent)">Q</b> ZAP</div>
   </div>
 </section>
 
 </div><!-- /pageWrap -->
 
-<button class="zap-btn" id="zapBtn">⚡ ZAP</button>
+<div class="skill-dock">
+  <button class="skill-btn zap" id="zapBtnMini" title="Zap (Q)"><span class="key">Q</span><span class="lbl">⚡ ZAP</span></button>
+  <button class="skill-btn ult" id="zapBtn" title="Ultimate (R)"><span class="key">R</span><span class="lbl">⚡⚡ ULTIMATE</span></button>
+</div>
 <button id="tweaksFab" style="position:fixed;right:20px;bottom:20px;z-index:499;background:var(--ink);color:var(--bg);border:none;border-radius:99px;padding:10px 16px;font-family:'JetBrains Mono';font-size:11px;cursor:pointer;display:none;letter-spacing:0.1em;">✶ TWEAKS</button>
 <div class="tweaks" id="tweaksPanel">
   <h4>Tweaks <button id="closeTweaks">×</button></h4>
@@ -519,11 +527,16 @@ function goTo(i, fromUser = true) {
   isAnimating = true;
   currentPage = i;
   if (fromUser) {
-    megaZap();
-    // tiny delay so the flash registers before the slide starts
-    setTimeout(() => {
+    if (firstScrollZap) {
+      firstScrollZap = false;
+      ultimateZap();
+      setTimeout(() => {
+        pageWrap.style.transform = `translateY(-${i * 100}vh)`;
+      }, 120);
+    } else {
+      miniZap();
       pageWrap.style.transform = `translateY(-${i * 100}vh)`;
-    }, 120);
+    }
   } else {
     pageWrap.style.transform = `translateY(-${i * 100}vh)`;
   }
@@ -603,9 +616,8 @@ const fxVign = document.getElementById('fxVign');
 const fxChroma = document.getElementById('fxChroma');
 const fxLayer = document.getElementById('fxLayer');
 
-function jaggedPath(x0, y0, x1, y1, segments, jitter, branchChance = 0.3) {
-  let d = `M ${x0.toFixed(1)} ${y0.toFixed(1)}`;
-  let prevX = x0, prevY = y0;
+function jaggedPath(x0, y0, x1, y1, segments, jitter, branchChance = 0.25) {
+  let d = `M${x0.toFixed(0)} ${y0.toFixed(0)}`;
   for (let i = 1; i <= segments; i++) {
     const t = i / segments;
     const baseX = x0 + (x1 - x0) * t;
@@ -613,147 +625,264 @@ function jaggedPath(x0, y0, x1, y1, segments, jitter, branchChance = 0.3) {
     const j = jitter * (1 - Math.abs(t - 0.5) * 0.4);
     const x = baseX + (Math.random() - 0.5) * j;
     const y = baseY + (Math.random() - 0.5) * j * 0.3;
-    d += ` L ${x.toFixed(1)} ${y.toFixed(1)}`;
+    d += `L${x.toFixed(0)} ${y.toFixed(0)}`;
     if (i > 1 && i < segments - 1 && Math.random() < branchChance) {
-      // recursive branch
-      const blen = 80 + Math.random() * 150;
-      const bang = Math.atan2(y1 - y0, x1 - x0) + (Math.random() - 0.5) * 1.8;
+      const blen = 60 + Math.random() * 110;
+      const bang = Math.atan2(y1 - y0, x1 - x0) + (Math.random() - 0.5) * 1.6;
       const bx = x + Math.cos(bang) * blen;
       const by = y + Math.sin(bang) * blen;
-      const bd = jaggedPath(x, y, bx, by, 4 + Math.floor(Math.random() * 4), 40, 0.15);
-      d += ` ${bd.replace(/^M /, 'M ')} M ${x.toFixed(1)} ${y.toFixed(1)}`;
+      // simple 3-segment branch, no recursion
+      const mx = x + (bx - x) * 0.5 + (Math.random() - 0.5) * 25;
+      const my = y + (by - y) * 0.5 + (Math.random() - 0.5) * 25;
+      d += `L${mx.toFixed(0)} ${my.toFixed(0)}L${bx.toFixed(0)} ${by.toFixed(0)}M${x.toFixed(0)} ${y.toFixed(0)}`;
     }
-    prevX = x; prevY = y;
   }
   return d;
 }
 
-function drawBoltSvg(pathD, delay = 0, duration = 0.55) {
-  const svgNS = 'http://www.w3.org/2000/svg';
+const svgNS = 'http://www.w3.org/2000/svg';
+function drawBoltSvg(pathD, delay = 0, duration = 0.5, opts = {}) {
+  const glowColor = opts.color || '#f0d84a';
+  const midColor  = opts.mid || '#fffce0';
+  const strokeBoost = opts.boost || 1;
   const svg = document.createElementNS(svgNS, 'svg');
   svg.setAttribute('viewBox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
   svg.setAttribute('preserveAspectRatio', 'none');
-  const g = document.createElementNS(svgNS, 'path'); g.setAttribute('d', pathD); g.setAttribute('class', 'glow'); g.setAttribute('stroke', '#f0d84a');
-  const m = document.createElementNS(svgNS, 'path'); m.setAttribute('d', pathD); m.setAttribute('class', 'mid');
-  const c = document.createElementNS(svgNS, 'path'); c.setAttribute('d', pathD); c.setAttribute('class', 'core'); c.setAttribute('stroke', '#ffffff');
-  svg.appendChild(g); svg.appendChild(m); svg.appendChild(c);
+  const glow = document.createElementNS(svgNS, 'path');
+  glow.setAttribute('d', pathD); glow.setAttribute('class', 'glow');
+  glow.style.stroke = glowColor;
+  if (strokeBoost !== 1) glow.style.strokeWidth = (14 * strokeBoost) + 'px';
+  const mid = document.createElementNS(svgNS, 'path');
+  mid.setAttribute('d', pathD); mid.setAttribute('class', 'mid');
+  mid.style.stroke = midColor;
+  const core = document.createElementNS(svgNS, 'path');
+  core.setAttribute('d', pathD); core.setAttribute('class', 'core');
+  svg.appendChild(glow); svg.appendChild(mid); svg.appendChild(core);
+  svg.style.opacity = 0;
   fxLayer.appendChild(svg);
 
-  // GSAP draw
-  [g, m, c].forEach((p, i) => {
-    const L = p.getTotalLength();
-    p.style.strokeDasharray = L;
-    p.style.strokeDashoffset = L;
-    gsap.to(p, {
-      strokeDashoffset: 0, duration: duration * 0.6, delay: delay + i * 0.02,
-      ease: 'power2.out',
-    });
-    gsap.to(p, {
-      opacity: 0, duration: duration * 0.5, delay: delay + duration * 0.5 + i * 0.02,
-      ease: 'power1.in'
-    });
-  });
-  setTimeout(() => svg.remove(), (delay + duration + 0.5) * 1000);
+  gsap.timeline({ onComplete: () => svg.remove() })
+    .to(svg, { opacity: 1, duration: 0.04, delay })
+    .to(svg, { opacity: 0.6, duration: 0.04 })
+    .to(svg, { opacity: 1, duration: 0.03 })
+    .to(svg, { opacity: 0, duration: duration, ease: 'power2.in' });
 }
 
-function sparkBurst(cx, cy, count = 20) {
+function sparkBurst(cx, cy, count = 12) {
+  const frag = document.createDocumentFragment();
+  const items = [];
   for (let i = 0; i < count; i++) {
     const s = document.createElement('div');
     s.className = 'spark';
     s.style.left = cx + 'px'; s.style.top = cy + 'px';
     const col = Math.random() > 0.5 ? '#f0d84a' : '#9ccf70';
-    s.style.background = `radial-gradient(circle, #fff, ${col} 50%, transparent)`;
-    fxLayer.appendChild(s);
+    s.style.background = col;
+    frag.appendChild(s);
+    items.push(s);
+  }
+  fxLayer.appendChild(frag);
+  items.forEach(s => {
     const a = Math.random() * Math.PI * 2;
-    const dist = 100 + Math.random() * 260;
-    const dur = 0.8 + Math.random() * 0.6;
+    const dist = 80 + Math.random() * 200;
     gsap.to(s, {
       x: Math.cos(a) * dist, y: Math.sin(a) * dist,
-      scale: 0.2, opacity: 0, duration: dur, ease: 'power3.out',
+      scale: 0.2, opacity: 0, duration: 0.7 + Math.random() * 0.4, ease: 'power3.out',
       onComplete: () => s.remove()
     });
-  }
+  });
 }
 
 function shockRing(cx, cy) {
   const r = document.createElement('div');
   r.className = 'shock-ring';
   r.style.left = cx + 'px'; r.style.top = cy + 'px';
-  r.style.width = '20px'; r.style.height = '20px';
-  r.style.transform = 'translate(-50%, -50%)';
   fxLayer.appendChild(r);
+  // transform-only — no width/height/borderWidth animation (forces layout)
   gsap.to(r, {
-    width: 600, height: 600, opacity: 0, borderWidth: 1,
-    duration: 1.1, ease: 'power2.out',
+    scale: 18, opacity: 0,
+    duration: 0.9, ease: 'power2.out',
     onComplete: () => r.remove()
   });
 }
 
-function megaZap() {
-  // 1. Pre-flash (small warning)
-  gsap.timeline()
-    .to(fxFlash, { opacity: 0.5, duration: 0.05 })
-    .to(fxFlash, { opacity: 0.1, duration: 0.08 })
-    // 2. Big strike
+let zapBusy = false;
+let firstScrollZap = true;
+
+function ultimateZap() {
+  // BIG — multi-color, multi-layer, screen-wide explosion. Expect a small frame drop.
+
+  // 1. Multi-stage rainbow flash (yellow → white → green → yellow)
+  const flashTl = gsap.timeline();
+  flashTl
+    .set(fxFlash, { background: 'radial-gradient(ellipse 80% 55% at 50% 35%, rgba(255,255,255,1), rgba(240,216,74,1) 22%, rgba(156,207,112,0.75) 48%, transparent 72%)' })
+    .to(fxFlash, { opacity: 1, duration: 0.05 })
+    .to(fxVign,  { opacity: 1, duration: 0.06 }, '<')
+    .to(fxFlash, { opacity: 0.25, duration: 0.06 })
+    .set(fxFlash, { background: 'radial-gradient(ellipse 90% 60% at 50% 40%, rgba(200,255,200,1), rgba(156,207,112,0.9) 25%, rgba(240,216,74,0.6) 55%, transparent 78%)' })
     .to(fxFlash, { opacity: 1, duration: 0.04 })
-    .to(fxVign, { opacity: 1, duration: 0.06 }, '<')
-    .to(fxChroma, { opacity: 1, duration: 0.06 }, '<')
-    .to(fxFlash, { opacity: 0.15, duration: 0.1 })
-    // 3. Secondary strike
-    .to(fxFlash, { opacity: 0.85, duration: 0.04 })
-    .to(fxFlash, { opacity: 0, duration: 0.35, ease: 'power2.in' })
-    .to(fxVign, { opacity: 0, duration: 0.4, ease: 'power2.in' }, '<')
-    .to(fxChroma, { opacity: 0, duration: 0.3 }, '<');
+    .to(fxFlash, { opacity: 0.3, duration: 0.06 })
+    .set(fxFlash, { background: 'radial-gradient(ellipse 70% 50% at 50% 30%, rgba(255,255,255,1), rgba(240,216,74,0.9) 20%, rgba(156,207,112,0.6) 45%, transparent 70%), linear-gradient(180deg, rgba(240,216,74,0.3), transparent 50%)' })
+    .to(fxFlash, { opacity: 0.95, duration: 0.04 })
+    .to(fxFlash, { opacity: 0, duration: 0.5, ease: 'power2.in' })
+    .to(fxVign,  { opacity: 0, duration: 0.55, ease: 'power2.in' }, '<');
 
-  // 4. Multiple bolts
-  const boltCount = 4 + Math.floor(Math.random() * 3);
+  // 2. Color palette for bolts
+  const palette = [
+    { color: '#f0d84a', mid: '#fffce0', boost: 1.2 },   // yellow
+    { color: '#9ccf70', mid: '#e8ffd8', boost: 1.2 },   // green
+    { color: '#ffffff', mid: '#f0d84a', boost: 1.0 },   // white core
+    { color: '#7fe6ff', mid: '#ffffff', boost: 0.9 },   // electric cyan
+    { color: '#f0d84a', mid: '#9ccf70', boost: 1.3 },   // yellow w/ green core
+  ];
+
+  // 3. MANY bolts — vertical strikes
+  const boltCount = 8;
   for (let i = 0; i < boltCount; i++) {
-    const x = 100 + Math.random() * (window.innerWidth - 200);
-    const endX = x + (Math.random() - 0.5) * 300;
-    const d = jaggedPath(x, -40, endX, window.innerHeight + 40, 14 + Math.floor(Math.random() * 6), 90, 0.35);
-    drawBoltSvg(d, i * 0.06, 0.55 + Math.random() * 0.2);
+    const x = 60 + Math.random() * (window.innerWidth - 120);
+    const endX = x + (Math.random() - 0.5) * 400;
+    const d = jaggedPath(x, -40, endX, window.innerHeight + 40, 14 + Math.floor(Math.random() * 6), 110, 0.4);
+    const c = palette[i % palette.length];
+    drawBoltSvg(d, i * 0.04, 0.6 + Math.random() * 0.2, c);
   }
 
-  // 5. Horizontal side bolts for drama
-  if (Math.random() < 0.6) {
+  // 4. Horizontal bolts — 2 of them, different heights
+  for (let i = 0; i < 2; i++) {
     const sideY = 100 + Math.random() * (window.innerHeight - 200);
-    const sd = jaggedPath(-20, sideY, window.innerWidth + 20, sideY + (Math.random() - 0.5) * 200, 12, 70, 0.2);
-    drawBoltSvg(sd, 0.1, 0.45);
+    const sd = jaggedPath(-20, sideY, window.innerWidth + 20, sideY + (Math.random() - 0.5) * 240, 14, 80, 0.3);
+    drawBoltSvg(sd, 0.08 + i * 0.1, 0.55, palette[(i + 2) % palette.length]);
   }
 
-  // 6. Shake
-  gsap.fromTo('body',
-    { x: 0, y: 0 },
-    { keyframes: [
-        { x: -6, y: 3, rotate: -0.4, duration: 0.04 },
-        { x: 7, y: -4, rotate: 0.4, duration: 0.05 },
-        { x: -4, y: 5, rotate: -0.3, duration: 0.04 },
-        { x: 5, y: -2, rotate: 0.2, duration: 0.04 },
-        { x: -2, y: 3, duration: 0.03 },
-        { x: 0, y: 0, rotate: 0, duration: 0.04 },
-      ]
-    });
+  // 5. Diagonal crossbolts for drama
+  const dx1 = jaggedPath(-20, -20, window.innerWidth + 20, window.innerHeight + 20, 14, 90, 0.3);
+  const dx2 = jaggedPath(window.innerWidth + 20, -20, -20, window.innerHeight + 20, 14, 90, 0.3);
+  drawBoltSvg(dx1, 0.15, 0.5, palette[1]);
+  drawBoltSvg(dx2, 0.18, 0.5, palette[0]);
 
-  // 7. Sparks from visible images / cards
+  // 6. Shake — bigger
+  gsap.fromTo(fxLayer, { x: 0, y: 0 }, {
+    keyframes: [
+      { x: -9, y: 4, duration: 0.04 },
+      { x: 11, y: -6, duration: 0.05 },
+      { x: -7, y: 7, duration: 0.05 },
+      { x: 8, y: -3, duration: 0.04 },
+      { x: -4, y: 4, duration: 0.04 },
+      { x: 3, y: -2, duration: 0.04 },
+      { x: 0, y: 0, duration: 0.04 },
+    ]
+  });
+
+  // 7. Sparks + shock rings — center + multiple cards
   const candidates = [...document.querySelectorAll('.hero-portrait, .profile-portrait, .frame, .jcard .thumb, .move, .stat')].filter(el => {
     const r = el.getBoundingClientRect();
     return r.top < window.innerHeight - 50 && r.bottom > 50 && r.width > 40;
   });
-  for (let k = 0; k < Math.min(3, candidates.length); k++) {
+  // always a huge burst at screen center
+  const cx0 = window.innerWidth / 2, cy0 = window.innerHeight / 2;
+  sparkBurst(cx0, cy0, 36);
+  shockRing(cx0, cy0);
+  setTimeout(() => shockRing(cx0, cy0), 140);
+  // plus up to 4 on visible elements
+  const picks = candidates.sort(() => Math.random() - 0.5).slice(0, 4);
+  picks.forEach((el, idx) => {
+    const r = el.getBoundingClientRect();
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    setTimeout(() => {
+      sparkBurst(cx, cy, 18);
+      shockRing(cx, cy);
+    }, idx * 80);
+  });
+
+  // 8. sound — louder
+  try { playZapSound(1.5); setTimeout(() => playZapSound(1), 180); } catch(e) {}
+}
+
+function miniZap() {
+  // quick flash + a few bolts (not as many as ultimate)
+  gsap.timeline()
+    .to(fxFlash, { opacity: 0.7, duration: 0.03 })
+    .to(fxFlash, { opacity: 0.2, duration: 0.05 })
+    .to(fxFlash, { opacity: 0.5, duration: 0.03 })
+    .to(fxFlash, { opacity: 0, duration: 0.25, ease: 'power2.in' });
+
+  const boltCount = 3 + Math.floor(Math.random() * 2); // 3-4
+  const colors = [
+    { color: '#f0d84a', mid: '#fffce0', boost: 1 },
+    { color: '#9ccf70', mid: '#fffce0', boost: 1 },
+    { color: '#ffffff', mid: '#f0d84a', boost: 0.9 },
+  ];
+  for (let i = 0; i < boltCount; i++) {
+    const x = 120 + Math.random() * (window.innerWidth - 240);
+    const endX = x + (Math.random() - 0.5) * 260;
+    const d = jaggedPath(x, -30, endX, window.innerHeight + 30, 10, 65, 0.22);
+    drawBoltSvg(d, i * 0.04, 0.4, colors[i % colors.length]);
+  }
+
+  // small shake
+  gsap.fromTo(fxLayer, { x: 0, y: 0 }, {
+    keyframes: [
+      { x: -3, y: 1, duration: 0.04 },
+      { x: 4, y: -2, duration: 0.05 },
+      { x: -2, y: 2, duration: 0.04 },
+      { x: 0, y: 0, duration: 0.04 },
+    ]
+  });
+
+  try { playZapSound(0.6); } catch(e) {}
+}
+function megaZap() {
+  if (zapBusy) return; // avoid stacking on rapid scroll
+  zapBusy = true;
+  setTimeout(() => { zapBusy = false; }, 350);
+
+  // 1. Flash (simpler, fewer keyframes)
+  gsap.timeline()
+    .to(fxFlash, { opacity: 1, duration: 0.04 })
+    .to(fxVign,  { opacity: 1, duration: 0.05 }, '<')
+    .to(fxFlash, { opacity: 0.2, duration: 0.08 })
+    .to(fxFlash, { opacity: 0.8, duration: 0.04 })
+    .to(fxFlash, { opacity: 0, duration: 0.3, ease: 'power2.in' })
+    .to(fxVign,  { opacity: 0, duration: 0.35, ease: 'power2.in' }, '<');
+
+  // 2. Fewer bolts, shorter paths
+  const boltCount = 3;
+  for (let i = 0; i < boltCount; i++) {
+    const x = 120 + Math.random() * (window.innerWidth - 240);
+    const endX = x + (Math.random() - 0.5) * 240;
+    const d = jaggedPath(x, -30, endX, window.innerHeight + 30, 10, 70, 0.25);
+    drawBoltSvg(d, i * 0.05, 0.45);
+  }
+
+  // 3. Shake fxLayer (which is already its own fixed compositor layer) — cheap
+  gsap.fromTo(fxLayer, { x: 0, y: 0 }, {
+    keyframes: [
+      { x: -4, y: 2, duration: 0.04 },
+      { x: 5, y: -3, duration: 0.05 },
+      { x: -3, y: 3, duration: 0.04 },
+      { x: 3, y: -1, duration: 0.04 },
+      { x: 0, y: 0, duration: 0.04 },
+    ]
+  });
+
+  // 4. Sparks on 1 visible card (was 3 — way fewer DOM nodes)
+  const candidates = [...document.querySelectorAll('.hero-portrait, .profile-portrait, .frame, .jcard .thumb, .move, .stat')].filter(el => {
+    const r = el.getBoundingClientRect();
+    return r.top < window.innerHeight - 50 && r.bottom > 50 && r.width > 40;
+  });
+  if (candidates.length) {
     const el = candidates[Math.floor(Math.random() * candidates.length)];
     const r = el.getBoundingClientRect();
     const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-    sparkBurst(cx, cy, 18);
+    sparkBurst(cx, cy, 10);
     shockRing(cx, cy);
   }
 
-  // 8. sound
+  // 5. sound
   try { playZapSound(); } catch(e) {}
 }
 
 // WebAudio zap sound
 let audioCtx = null;
-function playZapSound() {
+function playZapSound(vol = 1) {
   if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { return; } }
   const ctx = audioCtx;
   // rumble
@@ -773,7 +902,7 @@ function playZapSound() {
   const hp = ctx.createBiquadFilter();
   hp.type = 'highpass'; hp.frequency.value = 300;
   const g = ctx.createGain();
-  g.gain.value = 0.18;
+  g.gain.value = 0.18 * vol;
   src.connect(hp).connect(bp).connect(g).connect(ctx.destination);
   src.start();
 
@@ -782,23 +911,21 @@ function playZapSound() {
   osc.type = 'square'; osc.frequency.value = 2400;
   const og = ctx.createGain(); og.gain.value = 0;
   og.gain.setValueAtTime(0, ctx.currentTime);
-  og.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.005);
+  og.gain.linearRampToValueAtTime(0.08 * vol, ctx.currentTime + 0.005);
   og.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
   osc.connect(og).connect(ctx.destination);
   osc.start(); osc.stop(ctx.currentTime + 0.13);
 }
 
-document.getElementById('zapBtn').addEventListener('click', megaZap);
+document.getElementById('zapBtn').addEventListener('click', ultimateZap);
+document.getElementById('zapBtnMini').addEventListener('click', miniZap);
 window.addEventListener('keydown', (e) => {
-  if (e.key === 'z' || e.key === 'Z') megaZap();
-  if (e.key === ' ' && e.target.tagName !== 'INPUT') { e.preventDefault(); megaZap(); }
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'r' || e.key === 'R') { e.preventDefault(); ultimateZap(); }
+  if (e.key === 'q' || e.key === 'Q') { e.preventDefault(); miniZap(); }
 });
 
-// ambient — occasional small zap
-function scheduleAmbient() {
-  setTimeout(() => { if (Math.random() < 0.4) megaZap(); scheduleAmbient(); }, 12000 + Math.random() * 14000);
-}
-scheduleAmbient();
+// ambient disabled — was triggering on load
 
 /* ============ TWEAKS ============ */
 const tweaksPanel = document.getElementById('tweaksPanel');
